@@ -1,6 +1,5 @@
-// src/model/CounterModel.js
-import { BehaviorSubject, interval, merge } from 'rxjs';
-import { map, scan, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, interval, merge, EMPTY } from 'rxjs';
+import { map, scan, startWith, switchMap, tap } from 'rxjs/operators';
 
 const count$ = new BehaviorSubject(0);
 const autoIncrement$ = new BehaviorSubject(false);
@@ -17,11 +16,16 @@ const updateCount$ = merge(
     switchMap((enabled) =>
       enabled
         ? interval(1100).pipe(map(() => (count) => Math.min(count + 1, 98)))
-        : []
+        : EMPTY // Emit nothing when auto-increment is disabled
     )
   )
 ).pipe(
-  startWith(0),
+  startWith((count) => count), // Start with an identity function
+  tap((operation) => {
+    if (typeof operation !== 'function') {
+      console.error('Invalid operation:', operation); // Debugging output
+    }
+  }),
   scan((count, operation) => operation(count), 0)
 );
 
