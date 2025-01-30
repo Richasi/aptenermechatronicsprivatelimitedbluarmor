@@ -1,4 +1,3 @@
-// src/view/CounterView.js
 import React from 'react';
 import './CounterView.css';
 

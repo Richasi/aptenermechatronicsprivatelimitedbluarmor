@@ -1,4 +1,4 @@
-// src/intent/CounterIntent.js
+
 import { Subject } from 'rxjs';
 
 export class CounterIntent {
